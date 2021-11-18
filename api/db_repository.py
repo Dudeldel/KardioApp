@@ -84,7 +84,7 @@ def new_result(data):
     )
 
     with cursor(**db_config) as c:
-        statement = "INSERT INTO results (survay_data_id, model_name, predict_proba, prognosis) " \
+        statement = "INSERT INTO results (survey_data_id, model_name, predict_proba, prognosis) " \
                     "VALUES (%s,%s,%s,%s)"
         c.execute(statement, statement_data)
     return get_result_of_survey_data(data['survey_data_id'])
@@ -110,7 +110,7 @@ def get_latest_result(username):
     survey = get_latest_survey_data(username)
 
     with cursor(**db_config) as c:
-        c.execute("select * from results where survay_data_id = %s", (survey['id'],))
+        c.execute("select * from results where survey_data_id = %s", (survey['id'],))
 
         rv = c.fetchall()
         row_headers = [x[0] for x in c.description]
@@ -120,7 +120,7 @@ def get_latest_result(username):
 
 def get_result_of_survey_data(survey_data_id):
     with cursor(**db_config) as c:
-        c.execute("select * from results where survay_data_id = %s", (survey_data_id,))
+        c.execute("select * from results where survey_data_id = %s", (survey_data_id,))
 
         rv = c.fetchall()
         row_headers = [x[0] for x in c.description]
