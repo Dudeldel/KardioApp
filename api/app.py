@@ -1,8 +1,5 @@
 from flask import Flask, request, redirect, jsonify, url_for, make_response
 from flask_cors import CORS, cross_origin
-import json
-import os
-import mariadb
 import db_repository
 import requests
 import classifiers

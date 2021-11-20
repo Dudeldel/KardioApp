@@ -55,7 +55,7 @@ def _check_data(data: dict):
             raise ValueError(f'Value of {label} is not right.')
 
 
-def _data_to_list(data: dict) -> list[list]:
+def _data_to_list(data: dict):
     out = list()
     for label in data_conditions:
         out.append(data[label])
