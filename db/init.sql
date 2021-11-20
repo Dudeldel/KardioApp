@@ -1,8 +1,5 @@
 CREATE DATABASE cardio;
 
---CREATE TABLE cardio.people (name VARCHAR(50));
---INSERT INTO cardio.people VALUES ('rob'), ('tracy'), ('sam'), ('duke');
-
 CREATE TABLE cardio.users (
     id INTEGER AUTO_INCREMENT NOT NULL PRIMARY KEY,
     username VARCHAR(20) NOT NULL UNIQUE,
@@ -12,8 +9,6 @@ CREATE TABLE cardio.users (
     sex INTEGER NOT NULL,
     password VARCHAR(12) NOT NULL
 );
-
-INSERT INTO cardio.users VALUES (1, 'robe', 'mm' , 'dd', '2020-11-11', 0, 'milka'), (2, 'ebb', 'mn' , 'aa', '2020-10-11', 0, 'oko');
 
 --     age, < można wyliczyc z birth date
 --     sex, < iest w userze
