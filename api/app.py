@@ -1,26 +1,20 @@
-from flask import Flask, request, jsonify, make_response
+from flask import Flask, request, redirect, jsonify, url_for, make_response
 from flask_cors import CORS, cross_origin
 import json
 import os
 import mariadb
-db_config = {
-    'host': os.environ['DB_HOSTNAME'],
-    'port': 3306,
-    'user': os.environ['DB_USERNAME'],
-    'password': os.environ['DB_PASSWORD'],
-    'database': os.environ['DB_NAME']
-}
-
 import db_repository
+import requests
+import classifiers
 
 app = Flask(__name__)
 CORS(app)
+
 
 @app.route("/")
 def hello_world():
     return "<p>Co mówi ksiądz po ślubie informatyka?</p> \
             <p>Pobieranie zakończone!<p>"
-
 
 @app.route('/api/user/register', methods=['POST'])
 @cross_origin()
@@ -158,3 +152,13 @@ def user_edit():
 
 #    # return the results!
 #    return json.dumps(json_data)
+
+@app.route("/classify", methods=['POST'])
+def classify():
+    if request.method == 'POST':
+        data = request.get_json()
+        out = dict()
+        for cls in classifiers.classifiers_pkl:
+            out[cls] = classifiers.classify(cls, data)
+
+        return jsonify(out)
