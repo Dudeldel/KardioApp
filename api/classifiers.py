@@ -27,7 +27,7 @@ data_conditions = {
     'oldpeak': lambda x: 0 <= x <= 62,
     'slope': lambda x: x in [1, 2, 3],
     'major_vessels': lambda x: x in [0, 1, 2, 3],
-    'thal': lambda x: x in [3, 4, 5, 6, 7]
+    'thal': lambda x: x in [3, 6, 7]
 }
 
 
@@ -55,7 +55,7 @@ def _check_data(data: dict):
             raise ValueError(f'Value of {label} is not right.')
 
 
-def _data_to_list(data: dict) -> list[list]:
+def _data_to_list(data: dict):
     out = list()
     for label in data_conditions:
         out.append(data[label])
