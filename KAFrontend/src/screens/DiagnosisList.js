@@ -21,6 +21,17 @@ const data2 = {
 }
 
 export default function Dashboard({ navigation }) {
+  useEffect(() => {
+    var xhr = new XMLHttpRequest();
+    xhr.onreadystatechange = function () {
+      if (xhr.readyState == XMLHttpRequest.DONE) {
+        alert(xhr.responseText);
+      }
+    }
+    xhr.open('GET', 'http://example.com', true);
+    xhr.send();
+    console.log("loaded");
+  });
   return (
 
     <ScrollView contentContainerStyle={styles.container}>
