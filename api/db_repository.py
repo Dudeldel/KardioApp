@@ -2,7 +2,6 @@ import datetime
 
 from db_connector import cursor
 
-# from flask import Flask, request, jsonify, make_response
 import os
 
 db_config = {
@@ -101,7 +100,7 @@ def get_all_results(username):
 
     out_dict = {}
     for res_id, res in enumerate(rv):
-        out_dict[res_id] = dict(zip(row_headers, rv[0]))
+        out_dict[res_id] = dict(zip(row_headers, res))
 
     return out_dict
 
@@ -125,7 +124,11 @@ def get_result_of_survey_data(survey_data_id):
         rv = c.fetchall()
         row_headers = [x[0] for x in c.description]
 
-    return dict(zip(row_headers, rv[0]))
+        out_dict = {}
+        for res_id, res in enumerate(rv):
+            out_dict[res_id] = dict(zip(row_headers, res))
+
+    return out_dict
 
 
 def new_survey_data(username, data):
@@ -173,7 +176,7 @@ def get_all_survey_data(username):
 
     out_dict = {}
     for res_id, res in enumerate(rv):
-        out_dict[res_id] = dict(zip(row_headers, rv[0]))
+        out_dict[res_id] = dict(zip(row_headers, res))
 
     return out_dict
 

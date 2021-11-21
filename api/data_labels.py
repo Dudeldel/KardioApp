@@ -33,7 +33,7 @@ survey_data = {
         3: 'downsloping',
     },
 
-    'THAL': {
+    'thal': {
         3: 'normal',
         6: 'fixed defect',
         7: 'reversable defect',
