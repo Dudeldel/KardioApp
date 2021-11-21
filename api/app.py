@@ -173,5 +173,44 @@ def classify():
         return make_response(datas, 200)
 
 
+@app.route("/api/survey/data", methods=['GET'])
+@cross_origin()
+def get_survey_data():
+    if request.method == 'GET':
+        query = request.args
+        
+        if 'username' not in query:
+            return jsonify(
+                status = True,
+                message = 'Incorrect query'
+            ), 400
+
+        user = db_repository.get_user(query["username"])
+        datas = db_repository.get_all_survey_data(query["username"])
+
+        for d in datas:
+            datas[d]["age"] = calculate_age(user["birth_date"], datas[d]["date"])
+            datas[d]["sex"] = user["sex"]
+
+        return make_response(datas, 200)
+
+
+@app.route("/api/survey/result", methods=['GET'])
+@cross_origin()
+def get_survey_data():
+    if request.method == 'GET':
+        query = request.args
+        
+        if 'id' not in query:
+            return jsonify(
+                status = True,
+                message = 'Incorrect query'
+            ), 400
+
+        results = db_repository.get_result_of_survey_data(query["id"])
+
+        return make_response(results, 200)
+
+
 def calculate_age(born, day=date.today()):
     return day.year - born.year - ((day.month, day.day) < (born.month, born.day))
