@@ -197,7 +197,7 @@ def get_survey_data():
 
 @app.route("/api/survey/result", methods=['GET'])
 @cross_origin()
-def get_survey_data():
+def get_survey_result():
     if request.method == 'GET':
         query = request.args
         

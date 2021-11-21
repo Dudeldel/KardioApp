@@ -1,1 +1,15 @@
 __pycache__
+KAFrontend/node_modules/
+KAFrontend/.expo/
+KAFrontend/dist/
+KAFrontend/npm-debug.*
+KAFrontend/*.jks
+KAFrontend/*.p8
+KAFrontend/*.p12
+KAFrontend/*.key
+KAFrontend/*.mobileprovision
+KAFrontend/*.orig.*
+KAFrontend/web-build/
+
+# macOS
+KAFrontend/.DS_Store

@@ -33,6 +33,8 @@ export default function LoginScreen({ navigation }) {
 
       if (this.status == 200) {
         var data = JSON.parse(this.responseText);
+        global.login = email.value
+        global.password = pass.toString()
         navigation.reset({
           index: 0,
           routes: [{ name: 'MainApp' }],

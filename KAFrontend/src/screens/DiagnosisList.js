@@ -1,5 +1,5 @@
-import React from 'react'
-import { View, StyleSheet, TouchableOpacity } from 'react-native'
+import React, { useEffect } from 'react'
+import { View, StyleSheet, TouchableOpacity, TouchableHighlight } from 'react-native'
 import { ScrollView } from 'react-native-gesture-handler'
 import DiagnosisMemo from '../components/DiagnosisMemo'
 import Header from '../components/Header'
@@ -25,10 +25,10 @@ export default function Dashboard({ navigation }) {
     var xhr = new XMLHttpRequest();
     xhr.onreadystatechange = function () {
       if (xhr.readyState == XMLHttpRequest.DONE) {
-        alert(xhr.responseText);
+        console.log(xhr.responseText);
       }
     }
-    xhr.open('GET', 'http://example.com', true);
+    xhr.open('GET', 'http://192.168.1.57:5000/api/survey/data?username=' + global.login, true);
     xhr.send();
     console.log("loaded");
   });
@@ -36,14 +36,14 @@ export default function Dashboard({ navigation }) {
 
     <ScrollView contentContainerStyle={styles.container}>
       <Header>Historia wyników</Header>
-      <DiagnosisMemo data={data1}></DiagnosisMemo>
-      <DiagnosisMemo data={data2}></DiagnosisMemo>
-      <DiagnosisMemo data={data2}></DiagnosisMemo>
-      <DiagnosisMemo data={data2}></DiagnosisMemo>
-      <DiagnosisMemo data={data2}></DiagnosisMemo>
-      <DiagnosisMemo data={data2}></DiagnosisMemo>
-      <DiagnosisMemo data={data2}></DiagnosisMemo>
-      <DiagnosisMemo data={data2}></DiagnosisMemo>
+      <DiagnosisMemo data={data1} navigation={navigation}></DiagnosisMemo>
+      <DiagnosisMemo data={data2} navigation={navigation}></DiagnosisMemo>
+      <DiagnosisMemo data={data2} navigation={navigation}></DiagnosisMemo>
+      <DiagnosisMemo data={data2} navigation={navigation}></DiagnosisMemo>
+      <DiagnosisMemo data={data2} navigation={navigation}></DiagnosisMemo>
+      <DiagnosisMemo data={data2} navigation={navigation}></DiagnosisMemo>
+      <DiagnosisMemo data={data2} navigation={navigation}></DiagnosisMemo>
+      <DiagnosisMemo data={data2} navigation={navigation}></DiagnosisMemo>
     </ScrollView>
 
   )

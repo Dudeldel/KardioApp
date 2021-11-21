@@ -1,33 +1,35 @@
 import React from 'react'
 import { ImageBackground, StyleSheet, KeyboardAvoidingView, View } from 'react-native'
-import { ScrollView } from 'react-native-gesture-handler'
+import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler'
 import { theme } from '../core/theme'
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { Text } from 'react-native-paper'
-export default function DiagnosisMemo({ data }) {
+export default function DiagnosisMemo({ navigation, data }) {
   return (
     <View style={styles.container} behavior="padding">
-      <View style={{ flex: 1, alignSelf: 'flex-start' }}><Text style={styles.date}>Data: {data.date}</Text></View>
-      <View style={{ flex: 9, flexDirection: 'row', alignItems: 'center' }}>
-        <View style={styles.isDiagnosed}>
-          {data.isSick
-            ? <MaterialCommunityIcons name="alert-circle" color={"red"} size={48} />
-            : <MaterialCommunityIcons name="check-bold" color={"green"} size={48} />
-          }
+      <TouchableOpacity style={styles.container} onPress={() => navigation.navigate('Diagnosis')}>
+        <View style={{ flex: 1, alignSelf: 'flex-start' }}><Text style={styles.date}>Data: {data.date}</Text></View>
+        <View style={{ flex: 9, flexDirection: 'row', alignItems: 'center' }}>
+          <View style={styles.isDiagnosed}>
+            {data.isSick
+              ? <MaterialCommunityIcons name="alert-circle" color={"red"} size={48} />
+              : <MaterialCommunityIcons name="check-bold" color={"green"} size={48} />
+            }
+          </View>
+          <View style={styles.info}>
+            <Text style={styles.text}>Puls:</Text>
+            <Text style={styles.text}>Cholesterol:</Text>
+            <Text style={styles.text}>Coś1:</Text>
+            <Text style={styles.text}>Coś2:</Text>
+          </View>
+          <View style={styles.det}>
+            <Text style={styles.text}>{data.pulse}</Text>
+            <Text style={styles.text}>{data.choles}</Text>
+            <Text style={styles.text}>{data.something1}</Text>
+            <Text style={styles.text}>{data.something2}</Text>
+          </View>
         </View>
-        <View style={styles.info}>
-          <Text style={styles.text}>Puls:</Text>
-          <Text style={styles.text}>Cholesterol:</Text>
-          <Text style={styles.text}>Coś1:</Text>
-          <Text style={styles.text}>Coś2:</Text>
-        </View>
-        <View style={styles.det}>
-          <Text style={styles.text}>{data.pulse}</Text>
-          <Text style={styles.text}>{data.choles}</Text>
-          <Text style={styles.text}>{data.something1}</Text>
-          <Text style={styles.text}>{data.something2}</Text>
-        </View>
-      </View>
+      </TouchableOpacity>
     </View >
   )
 }

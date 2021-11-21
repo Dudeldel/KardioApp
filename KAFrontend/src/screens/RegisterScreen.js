@@ -50,14 +50,9 @@ export default function RegisterScreen({ navigation }) {
       if (this.readyState != 4) return;
 
       if (this.status == 201) {
-        Alert.alert(
-          "Git!",
-          xhr.responseText,
-          [
-            { text: "OK" }
-          ]
-        );
         var data = JSON.parse(this.responseText);
+        global.login = email.value
+        global.password = pass.toString()
         navigation.reset({
           index: 0,
           routes: [{ name: 'MainApp' }],
