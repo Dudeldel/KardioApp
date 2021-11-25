@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { View, StyleSheet, TouchableOpacity, Alert } from 'react-native'
 import { Text, RadioButton } from 'react-native-paper'
 import Background from '../components/Background'
@@ -12,51 +12,71 @@ import DateTimePickerModal from "react-native-modal-datetime-picker";
 import { ScrollView } from 'react-native-gesture-handler'
 
 
-export default function RegisterScreen({ navigation }) {
-  const [name, setName] = useState({ value: '', error: '' })
-  const [email, setEmail] = useState({ value: '', error: '' })
-  const [password, setPassword] = useState({ value: '', error: '' })
+export default function UserScreen({ navigation }) {
+  const [name, setName] = useState('')
   const [date, setDate] = useState(new Date())
   const [show, setShow] = useState(false)
   const [checked, setChecked] = useState('man');
-  function hashCode(str) {
-    var hash = 0, i, chr;
-    if (str.length === 0) return hash;
-    for (i = 0; i < str.length; i++) {
-      chr = str.charCodeAt(i);
-      hash = ((hash << 5) - hash) + chr;
-      hash |= 0; // Convert to 32bit integer
+  const [editMode, setEditMode] = useState(false);
+  const [getData, setGetData] = useState(true)
+  useEffect(() => {
+    if (getData) {
+      var xhr = new XMLHttpRequest();
+      xhr.open("POST", "http://192.168.1.57:5000/api/user/login", true);
+      xhr.setRequestHeader('Content-Type', 'application/json');
+      xhr.onreadystatechange = function () {
+        if (this.readyState != 4) return;
+
+        if (this.status == 200) {
+          var data = JSON.parse(this.responseText);
+          setName(data.first_name + " " + data.last_name)
+          setDate(new Date(data.birth_date))
+          data.sex == 1 ? setChecked('man') : setChecked('woman')
+          setGetData(false)
+        }
+        else {
+          Alert.alert(
+            "Błąd!",
+            "Nieprawidłowy login lub hasło",
+            [
+              { text: "OK" }
+            ]
+          );
+        }
+        // end of state change: it can be after some time (async)
+      };
+
+      xhr.send(JSON.stringify({
+        username: global.login,
+        password: global.password.toString()
+      }));
     }
-    return hash;
-  };
+  });
   const handleConfirm = (date) => {
     setDate(date);
     setShow(false);
   };
   const onSignUpPressed = () => {
-    var fullname = name.value.split(" ")
+    if (!editMode) {
+      setEditMode(true);
+      return;
+    }
+    var fullname = name.split(" ")
     var firstName = fullname[0]
     var lastName = fullname[1]
     var sex = 0
-    var pass = hashCode(password.value)
     var birthDate = date.toISOString().split('T')[0]
     if (checked == "man") {
       sex = 1
     }
     var xhr = new XMLHttpRequest();
-    xhr.open("POST", "http://192.168.1.57:5000/api/user/register", true);
+    xhr.open("PATCH", "http://192.168.1.57:5000/api/user/edit", true);
     xhr.setRequestHeader('Content-Type', 'application/json');
     xhr.onreadystatechange = function () {
       if (this.readyState != 4) return;
 
-      if (this.status == 201) {
-        var data = JSON.parse(this.responseText);
-        global.login = email.value
-        global.password = pass.toString()
-        navigation.reset({
-          index: 0,
-          routes: [{ name: 'MainApp' }],
-        })
+      if (this.status == 200) {
+        setGetData(true)
       }
       else {
         Alert.alert(
@@ -71,8 +91,7 @@ export default function RegisterScreen({ navigation }) {
     };
 
     xhr.send(JSON.stringify({
-      username: email.value,
-      password: pass.toString(),
+      username: global.login,
       firstName: firstName,
       lastName: lastName,
       sex: sex,
@@ -82,44 +101,23 @@ export default function RegisterScreen({ navigation }) {
   }
 
   return (
-    <Background>
+    <View style={styles.container}>
       <BackButton goBack={navigation.goBack} />
-      <Header>Zarejestruj się</Header>
+      <Header>Konto użytkownika</Header>
       <TextInput
         label="Twoje imię"
         returnKeyType="next"
-        value={name.value}
-        onChangeText={(text) => setName({ value: text, error: '' })}
-        error={!!name.error}
-        errorText={name.error}
+        value={name}
+        onChangeText={(text) => setName(text)}
+        editable={editMode}
       />
-      <TextInput
-        label="E-mail"
-        returnKeyType="next"
-        value={email.value}
-        onChangeText={(text) => setEmail({ value: text, error: '' })}
-        error={!!email.error}
-        errorText={email.error}
-        autoCapitalize="none"
-        autoCompleteType="email"
-        textContentType="emailAddress"
-        keyboardType="email-address"
-      />
-      <TextInput
-        label="Hasło"
-        returnKeyType="done"
-        value={password.value}
-        onChangeText={(text) => setPassword({ value: text, error: '' })}
-        error={!!password.error}
-        errorText={password.error}
-        secureTextEntry
-      />
-      <TouchableOpacity style={{ width: '100%' }} onPress={() => setShow(true)}>
+      <TouchableOpacity style={{ width: '100%' }} onPress={() => { editMode ? setShow(true) : setShow(false) }}>
         <TextInput
           label="Data urodzenia"
           returnKeyType="done"
           value={date.getFullYear() + "-" + (('0' + (date.getMonth() + 1)).slice(-2)) + "-" + ('0' + (date.getDate())).slice(-2)}
           pointerEvents="none"
+          editable={editMode}
 
         />
       </TouchableOpacity>
@@ -134,20 +132,22 @@ export default function RegisterScreen({ navigation }) {
         locale='pl-PL'
       />
       <View style={styles.radioGroup}>
-        <Text onPress={() => setChecked('man')} style={checked === 'man' ? { fontWeight: 'bold' } : { fontWeight: 'normal' }}> Mężczyzna </Text>
+        <Text onPress={() => { editMode ? setChecked('man') : null }} style={checked === 'man' ? { fontWeight: 'bold' } : { fontWeight: 'normal' }}> Mężczyzna </Text>
         <RadioButton.Android
           value="man"
           status={checked === 'man' ? 'checked' : 'unchecked'}
           onPress={() => setChecked('man')}
           style={{ marginRight: 50 }}
           color={theme.colors.primary}
+          disabled={!editMode}
         />
-        <Text onPress={() => setChecked('woman')} style={checked === 'woman' ? { fontWeight: 'bold', marginLeft: 50 } : { fontWeight: 'normal', marginLeft: 50 }}> Kobieta </Text>
+        <Text onPress={() => { editMode ? setChecked('woman') : null }} style={checked === 'woman' ? { fontWeight: 'bold', marginLeft: 50 } : { fontWeight: 'normal', marginLeft: 50 }}> Kobieta </Text>
         <RadioButton.Android
           value="woman"
           status={checked === 'woman' ? 'checked' : 'unchecked'}
           onPress={() => setChecked('woman')}
           color={theme.colors.primary}
+          disabled={!editMode}
         />
       </View>
 
@@ -156,15 +156,9 @@ export default function RegisterScreen({ navigation }) {
         onPress={onSignUpPressed}
         style={{ marginTop: 24 }}
       >
-        Zarejestruj się
+        {editMode ? "Zaktualizuj dane" : "Edytuj dane"}
       </Button>
-      <View style={styles.footer}>
-        <Text>Masz już konto? </Text>
-        <TouchableOpacity onPress={() => navigation.replace('LoginScreen')}>
-          <Text style={styles.link}>Zaloguj się</Text>
-        </TouchableOpacity>
-      </View>
-    </Background >
+    </View >
   )
 }
 
@@ -196,5 +190,12 @@ const styles = StyleSheet.create({
   },
   radio: {
     backgroundColor: theme.colors.secondary,
-  }
+  },
+  container: {
+    padding: 20,
+    width: '100%',
+    alignSelf: 'center',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
 })

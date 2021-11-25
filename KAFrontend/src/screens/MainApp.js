@@ -7,7 +7,8 @@ import Button from '../components/Button'
 import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import DiagnosisList from './DiagnosisList.js'
-import LoginScreen from '../screens/LoginScreen.js'
+import UserScreen from '../screens/UserScreen.js'
+import NewDiagnosis from '../screens/NewDiagnosis.js'
 
 
 const Tab = createMaterialBottomTabNavigator();
@@ -15,7 +16,7 @@ const Tab = createMaterialBottomTabNavigator();
 export default function MainApp({ navigation }) {
     return (
         <Tab.Navigator initialRouteName="Badania" activeColor="#ffffff" barStyle={{ backgroundColor: '#560CCE' }}>
-            <Tab.Screen name="Nowe" component={LoginScreen} options={{
+            <Tab.Screen name="Nowe" component={NewDiagnosis} options={{
                 tabBarLabel: 'Nowe',
                 tabBarIcon: ({ color }) => (
                     <MaterialCommunityIcons name="briefcase-plus" color={color} size={26} />
@@ -29,7 +30,7 @@ export default function MainApp({ navigation }) {
                         <MaterialCommunityIcons name="format-list-checkbox" color={color} size={26} />
                     ),
                 }} />
-            <Tab.Screen name="Konto" component={LoginScreen}
+            <Tab.Screen name="Konto" component={UserScreen}
                 options={{
                     tabBarLabel: 'Konto',
                     tabBarIcon: ({ color }) => (

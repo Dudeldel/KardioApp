@@ -103,7 +103,9 @@ def user_edit():
 
         for f in fields:
             if f not in response:
-                response[f] = user[f]
+                response[f] = "Kupa"
+            else:
+                user[f] = response[f]
 
         response = db_repository.edit_user(user)
         
@@ -150,7 +152,7 @@ def classify():
                 "survey_data_id": new_data["id"]
             })
 
-
+        out["id"]=new_data["id"]
         return make_response(out, 200)
 
     if request.method == 'GET':
@@ -206,8 +208,8 @@ def get_survey_result():
                 status = True,
                 message = 'Incorrect query'
             ), 400
-
-        results = db_repository.get_result_of_survey_data(query["id"])
+        
+        results = db_repository.get_survey_data_by_id(query["id"])
 
         return make_response(results, 200)
 

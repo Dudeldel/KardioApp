@@ -7,11 +7,11 @@ import { Text } from 'react-native-paper'
 export default function DiagnosisMemo({ navigation, data }) {
   return (
     <View style={styles.container} behavior="padding">
-      <TouchableOpacity style={styles.container} onPress={() => navigation.navigate('Diagnosis')}>
-        <View style={{ flex: 1, alignSelf: 'flex-start' }}><Text style={styles.date}>Data: {data.date}</Text></View>
+      <TouchableOpacity style={styles.container} onPress={() => navigation.navigate('Diagnosis', { id: data.id })}>
+        <View style={{ flex: 1, alignSelf: 'flex-start' }}><Text style={styles.date}>Data: {(new Date(data.date)).toISOString().split('T')[0]}</Text></View>
         <View style={{ flex: 9, flexDirection: 'row', alignItems: 'center' }}>
           <View style={styles.isDiagnosed}>
-            {data.isSick
+            {data.wynik == 2
               ? <MaterialCommunityIcons name="alert-circle" color={"red"} size={48} />
               : <MaterialCommunityIcons name="check-bold" color={"green"} size={48} />
             }
@@ -19,14 +19,14 @@ export default function DiagnosisMemo({ navigation, data }) {
           <View style={styles.info}>
             <Text style={styles.text}>Puls:</Text>
             <Text style={styles.text}>Cholesterol:</Text>
-            <Text style={styles.text}>Coś1:</Text>
-            <Text style={styles.text}>Coś2:</Text>
+            <Text style={styles.text}>Ciśnienie krwi:</Text>
+            <Text style={styles.text}>Chore naczynia:</Text>
           </View>
           <View style={styles.det}>
-            <Text style={styles.text}>{data.pulse}</Text>
-            <Text style={styles.text}>{data.choles}</Text>
-            <Text style={styles.text}>{data.something1}</Text>
-            <Text style={styles.text}>{data.something2}</Text>
+            <Text style={styles.text}>{data.max_heart_rate}</Text>
+            <Text style={styles.text}>{data.serum_cholestoral}</Text>
+            <Text style={styles.text}>{data.rest_blood_pressure}</Text>
+            <Text style={styles.text}>{data.major_vessels}</Text>
           </View>
         </View>
       </TouchableOpacity>

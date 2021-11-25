@@ -67,7 +67,7 @@ def edit_user(user):
         statement = "update users " \
                     "set username=%s, first_name=%s, last_name=%s, birth_date=%s, sex=%s,  password=%s " \
                     "where username=%s"
-        data = (user['username'], user['first_name'], user['last_name'], user['birth_date'],
+        data = (user['username'], user['firstName'], user['lastName'], user['birthDate'],
                 user['sex'], user['password'], user['username'])
         c.execute(statement, data)
 
@@ -130,6 +130,28 @@ def get_result_of_survey_data(survey_data_id):
 
     return out_dict
 
+def get_survey_data_by_id(survey_data_id):
+    with cursor(**db_config) as c:
+        c.execute("""
+            select 
+            user_id, date, chest_pain_type, rest_blood_pressure,
+            serum_cholestoral, fasting_blood_sugar, res_electrocardiographic, max_heart_rate,
+            exercise_induced, oldpeak, slope, major_vessels, thal,
+            (SELECT GROUP_CONCAT(model_name) from results where survey_data_id = survey_data.id) as model_name,
+            (SELECT GROUP_CONCAT(predict_proba) from results where survey_data_id = survey_data.id) as predict_proba,
+            (SELECT GROUP_CONCAT(prognosis) from results where survey_data_id = survey_data.id) as prognosis
+            from survey_data 
+            where id = %s
+        """, (survey_data_id,))
+
+        rv = c.fetchall()
+        row_headers = [x[0] for x in c.description]
+
+        out_dict = {}
+        for res_id, res in enumerate(rv):
+            out_dict[res_id] = dict(zip(row_headers, res))
+
+    return out_dict
 
 def new_survey_data(username, data):
     if not username_exist(username):
@@ -168,7 +190,17 @@ def get_all_survey_data(username):
 
     with cursor(**db_config) as c:
         c.execute(
-            "select * from survey_data where user_id = (select id from users where username = %s) order by date desc",
+            """select 
+            survey_data.id, 
+            survey_data.date, 
+            survey_data.rest_blood_pressure, 
+            survey_data.serum_cholestoral, 
+            survey_data.max_heart_rate, 
+            survey_data.major_vessels,
+            CAST((select avg(prognosis) from results where survey_data_id = survey_data.id group by prognosis limit 1) as INT) as 'wynik'
+            from survey_data
+            where user_id = (select id from users where username = %s) 
+            order by date desc""",
             (username,))
 
         rv = c.fetchall()

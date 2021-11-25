@@ -9,6 +9,8 @@ import {
   RegisterScreen,
   MainApp,
   Diagnosis,
+  NewDiagnosis,
+  UserScreen
 } from './src/screens';
 
 
@@ -29,6 +31,8 @@ export default function App() {
           <Stack.Screen name="RegisterScreen" component={RegisterScreen} />
           <Stack.Screen name="MainApp" component={MainApp} />
           <Stack.Screen name="Diagnosis" component={Diagnosis} />
+          <Stack.Screen name="NewDiagnosis" component={NewDiagnosis} />
+          <Stack.Screen name="UserScreen" component={UserScreen} />
         </Stack.Navigator>
       </NavigationContainer>
     </Provider>

@@ -12,7 +12,7 @@ import { theme } from '../core/theme'
 export default function LoginScreen({ navigation }) {
   const [email, setEmail] = useState({ value: '', error: '' })
   const [password, setPassword] = useState({ value: '', error: '' })
-  hashCode = function (str) {
+  function hashCode(str) {
     var hash = 0, i, chr;
     if (str.length === 0) return hash;
     for (i = 0; i < str.length; i++) {
